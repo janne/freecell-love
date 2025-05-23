@@ -1,4 +1,4 @@
-# Freelove
+# Freecell Love
 
 A Freecell solitaire game implemented in Lua with [LÖVE](https://love2d.org/).
 
@@ -14,6 +14,4 @@ $ love .
 
 ## Tests
 
-```
-$ lua main.lua
-```
+Automatically run on every startup.
