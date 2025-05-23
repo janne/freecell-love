@@ -8,7 +8,6 @@ end
 
 function game:new()
     local g = {
-        cards = stack:new(),
         homecells = {stack:new(spacing[1] - 10, 60), stack:new(spacing[2] - 10, 60), stack:new(spacing[3] - 10, 60),
                      stack:new(spacing[4] - 10, 60)},
         freecells = {stack:new(spacing[5] + 10, 60), stack:new(spacing[6] + 10, 60), stack:new(spacing[7] + 10, 60),
@@ -17,14 +16,13 @@ function game:new()
                    stack:new(spacing[4], 200, true), stack:new(spacing[5], 200, true), stack:new(spacing[6], 200, true),
                    stack:new(spacing[7], 200, true), stack:new(spacing[8], 200, true)}
     }
-
+    local cards = stack:new()
     for i = 1, 52 do
         local card = card:new(i)
-        card.pos = animated_pos:new(375, 500)
-        g.cards:insert(card)
+        cards:insert(card)
     end
-    g.cards:shuffle()
-    for i, card in ipairs(g.cards) do
+    cards:shuffle()
+    for i, card in ipairs(cards) do
         local col = (i - 1) % 8 + 1
         g.tableau[col]:push(card)
     end
@@ -98,4 +96,24 @@ function game:automove_card(card)
         stack:push(card)
         return
     end
+end
+
+function game:cards()
+    local cards = {}
+    for _, stack in ipairs(self.homecells) do
+        for _, card in ipairs(stack) do
+            table.insert(cards, card)
+        end
+    end
+    for _, stack in ipairs(self.freecells) do
+        for _, card in ipairs(stack) do
+            table.insert(cards, card)
+        end
+    end
+    for _, stack in ipairs(self.tableau) do
+        for _, card in ipairs(stack) do
+            table.insert(cards, card)
+        end
+    end
+    return cards
 end

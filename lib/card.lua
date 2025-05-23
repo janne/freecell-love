@@ -14,7 +14,7 @@ function card:new(index, initial_pos)
     return setmetatable({
         suit = suit,
         rank = rank,
-        pos = animated_pos:new(initial_pos),
+        pos = nil,
         target = nil,
         size = pos:new(gfx:getWidth(), gfx:getHeight()) * scale,
         scale = scale,

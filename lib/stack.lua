@@ -23,7 +23,11 @@ function stack:push(card)
     if self.spread then
         newPos = self.pos + pos:new(0, #self * 20)
     end
-    card.pos:animateTo(newPos)
+    if card.pos then
+        card.pos:animateTo(newPos)
+    else
+        card.pos = animated_pos:from_pos(newPos)
+    end
 end
 
 function stack:pop()

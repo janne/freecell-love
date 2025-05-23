@@ -48,14 +48,13 @@ function love.update(dt)
 
     if love.mouse.isDown(1) and not dragged_card then
         local border = pos:new(14, 14)
-        for i = 52, 1, -1 do
-            local card = state.cards[i]
+        local cards = state:cards()
+        for i = #cards, 1, -1 do
+            local card = cards[i]
             local mouse = pos:new(love.mouse.getPosition())
             if mouse > card.pos + border and mouse < card.pos + card.size - border then
                 dragged_card = card
                 dragging_origin = card.pos
-                state.cards:remove(i)
-                state.cards:insert(card)
                 draggingOffset = mouse - card.pos
                 break
             end
@@ -66,8 +65,15 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-    for _, card in ipairs(state.cards) do
-        love.graphics.draw(card.gfx, card.pos.x, card.pos.y, 0, card.scale.x, card.scale.y)
+    for _, card in ipairs(state:cards()) do
+        if (card ~= dragged_card and not card.pos:is_animating()) then
+            love.graphics.draw(card.gfx, card.pos.x, card.pos.y, 0, card.scale.x, card.scale.y)
+        end
+    end
+    for _, card in ipairs(state:cards()) do
+        if (card == dragged_card or card.pos:is_animating()) then
+            love.graphics.draw(card.gfx, card.pos.x, card.pos.y, 0, card.scale.x, card.scale.y)
+        end
     end
     for i, button in ipairs(buttons) do
         button:draw()

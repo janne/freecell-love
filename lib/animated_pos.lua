@@ -25,6 +25,15 @@ function animated_pos:animateTo(target_pos)
     end
 end
 
+function animated_pos:is_animating()
+    for _, animation in ipairs(animations) do
+        if animation == self then
+            return true
+        end
+    end
+    return false
+end
+
 function animated_pos.update(dt)
     for i, animation in ipairs(animations) do
         local newPos = animation + (animation.target - animation) * pos:new(dt * 5, dt * 5)
