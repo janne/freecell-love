@@ -4,7 +4,7 @@ require("lib/animated_pos")
 card = {}
 card.__index = card
 
-local suits = {"Clubs", "Diamonds", "Hearts", "Spades"}
+local suits = {"Clubs", "Diamonds", "Spades", "Hearts"}
 
 function card:new(index, initial_pos)
     local suit = math.floor((index - 1) / 13) + 1
@@ -14,7 +14,6 @@ function card:new(index, initial_pos)
         suit = suit,
         rank = rank,
         pos = animated_pos:new(initial_pos),
-        startPos = initial_pos or pos:new(),
         target = nil,
         size = pos:new(gfx:getWidth(), gfx:getHeight()),
         gfx = gfx
