@@ -10,12 +10,14 @@ function card:new(index, initial_pos)
     local suit = math.floor((index - 1) / 13) + 1
     local rank = (index - 1) % 13 + 1
     local gfx = love.graphics.newImage("gfx/cards/" .. suits[suit] .. " " .. rank .. ".png")
+    local scale = pos:new(1.9, 1.8)
     return setmetatable({
         suit = suit,
         rank = rank,
         pos = animated_pos:new(initial_pos),
         target = nil,
-        size = pos:new(gfx:getWidth(), gfx:getHeight()),
+        size = pos:new(gfx:getWidth(), gfx:getHeight()) * scale,
+        scale = scale,
         gfx = gfx
     }, self)
 end
