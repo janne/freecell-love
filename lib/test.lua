@@ -1,6 +1,11 @@
 local run_tests = true
 local running_test = nil
 
+-- Support running tests standalone
+if love == nil and run_tests then
+    love = {}
+end
+
 function it(description, func)
     running_test = description
     if run_tests then
