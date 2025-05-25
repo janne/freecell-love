@@ -123,6 +123,26 @@ function game:cards()
     return cards
 end
 
+function game:top_cards()
+    local cards = {}
+    for _, stack in ipairs(self.homecells) do
+        if #stack > 0 then
+            table.insert(cards, stack[#stack])
+        end
+    end
+    for _, stack in ipairs(self.freecells) do
+        if #stack > 0 then
+            table.insert(cards, stack[#stack])
+        end
+    end
+    for _, stack in ipairs(self.tableau) do
+        if #stack > 0 then
+            table.insert(cards, stack[#stack])
+        end
+    end
+    return cards
+end
+
 function game:trigger_animations()
     for_each(self:cards(), function(card)
         if card.pos.target and not card.pos:is_animating() and

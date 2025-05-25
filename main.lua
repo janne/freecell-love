@@ -62,7 +62,7 @@ function love.update(dt)
 
     if love.mouse.isDown(1) and not dragged_card then
         local border = pos:new(14, 14)
-        local cards = state:cards()
+        local cards = state:top_cards()
         for i = #cards, 1, -1 do
             local card = cards[i]
             local mouse = pos:new(love.mouse.getPosition())
