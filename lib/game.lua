@@ -1,3 +1,5 @@
+require("lib/copy")
+
 game = {}
 game.__index = game
 
@@ -29,8 +31,8 @@ function game:new()
     return setmetatable(g, self)
 end
 
-function game:remove_card(card)
-    for _, list in ipairs({self.freecells, self.homecells, self.tableau}) do
+local function remove_card(game, card)
+    for _, list in ipairs({game.freecells, game.homecells, game.tableau}) do
         for _, stack in ipairs(list) do
             for i, cell in ipairs(stack) do
                 if cell == card then
@@ -42,8 +44,8 @@ function game:remove_card(card)
     end
 end
 
-function game:available_freecell()
-    for _, stack in ipairs(self.freecells) do
+local function available_freecell(game)
+    for _, stack in ipairs(game.freecells) do
         if #stack == 0 then
             return stack
         end
@@ -51,8 +53,8 @@ function game:available_freecell()
     return nil
 end
 
-function game:available_tableau(card)
-    for i, stack in ipairs(self.tableau) do
+local function available_tableau(game, card)
+    for i, stack in ipairs(game.tableau) do
         if #stack == 0 then
             return stack
         end
@@ -63,8 +65,8 @@ function game:available_tableau(card)
     return nil
 end
 
-function game:available_homecell(card)
-    for i, stack in ipairs(self.homecells) do
+local function available_homecell(game, card)
+    for i, stack in ipairs(game.homecells) do
         if #stack == 0 and card.rank == 1 then
             return stack
         elseif #stack > 0 and stack[#stack].suit == card.suit and stack[#stack].rank + 1 == card.rank then
@@ -75,27 +77,30 @@ function game:available_homecell(card)
 end
 
 function game:automove_card(card)
+    local game = copy(self)
+
     -- Homecells
-    local stack = self:available_homecell(card)
-    if (stack ~= nil) then
-        self:remove_card(card)
-        stack:push(card)
-        return
+    local stack = available_homecell(game, card)
+    if stack then
+        remove_card(game, card)
+        stack:push(copy(card))
+        return game
     end
     -- Tableau
-    local stack = self:available_tableau(card)
-    if (stack ~= nil) then
-        self:remove_card(card)
-        stack:push(card)
-        return
+    local stack = available_tableau(game, card)
+    if stack then
+        remove_card(game, card)
+        stack:push(copy(card))
+        return game
     end
     -- Freecells
-    local stack = self:available_freecell()
-    if (stack ~= nil) then
-        self:remove_card(card)
-        stack:push(card)
-        return
+    local stack = available_freecell(game)
+    if stack then
+        remove_card(game, card)
+        stack:push(copy(card))
+        return game
     end
+    return self
 end
 
 function game:cards()
@@ -116,4 +121,13 @@ function game:cards()
         end
     end
     return cards
+end
+
+function game:trigger_animations()
+    for_each(self:cards(), function(card)
+        if card.pos.target and not card.pos:is_animating() and
+            (card.pos.target.x ~= card.pos.x or card.pos.target.y ~= card.pos.y) then
+            card.pos:animateTo(card.pos.target)
+        end
+    end)
 end

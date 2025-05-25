@@ -6,6 +6,10 @@ setmetatable(animated_pos, {
     __index = pos
 })
 
+function animated_pos:__tostring()
+    return "(" .. self.x .. ", " .. self.y .. ", target: " .. tostring(self.target) .. ")"
+end
+
 local animations = {}
 
 function animated_pos:new(x, y)
@@ -19,19 +23,16 @@ function animated_pos:from_pos(pos)
 end
 
 function animated_pos:animateTo(target_pos)
-    if (target_pos.x ~= self.x or target_pos.y ~= self.y) then
+    if target_pos.x ~= self.x or target_pos.y ~= self.y then
         self.target = target_pos
         table.insert(animations, self)
     end
 end
 
 function animated_pos:is_animating()
-    for _, animation in ipairs(animations) do
-        if animation == self then
-            return true
-        end
-    end
-    return false
+    return find(animations, function(animation)
+        return animation == self
+    end) ~= nil
 end
 
 function animated_pos.update(dt)

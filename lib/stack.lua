@@ -1,5 +1,6 @@
 require("lib/test")
 require("lib/card")
+require("lib/animated_pos")
 
 stack = {}
 stack.__index = stack

@@ -42,6 +42,10 @@ function pos:__gt(other)
     return self.x > other.x and self.y > other.y
 end
 
+function pos:__eq(other)
+    return self.x == other.x and self.y == other.y
+end
+
 function pos:abs()
     return pos:new(math.abs(self.x), math.abs(self.y))
 end

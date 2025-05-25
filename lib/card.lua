@@ -1,5 +1,4 @@
 require("lib/pos")
-require("lib/animated_pos")
 
 card = {}
 card.__index = card
@@ -20,4 +19,8 @@ function card:new(index, initial_pos)
         scale = scale,
         gfx = gfx
     }, self)
+end
+
+function card:__eq(other)
+    return self.suit == other.suit and self.rank == other.rank
 end
