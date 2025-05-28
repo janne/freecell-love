@@ -6,6 +6,10 @@ A Freecell solitaire game implemented in Lua with [LÖVE](https://love2d.org/).
 
 - [LÖVE](https://love2d.org/).
 
+## VSCode Setup
+
+I followed [Sheepolution - How to LÖVE](https://sheepolution.com/learn/book/bonus/vscode).
+
 ## Run
 
 ```

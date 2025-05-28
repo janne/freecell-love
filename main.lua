@@ -12,13 +12,13 @@ require "lib/func"
 local dragged_card = nil
 local draggingOffset = nil
 local dragging_origin = nil
-local state = game:new()
+local state = Game:new()
 local history = {}
 
-local buttons = { button:new(10, 10, 100, 50, "New Game", function()
+local buttons = { Button:new(10, 10, 100, 50, "New Game", function()
   history = {}
-  state = game:new()
-end), button:new(120, 10, 100, 50, "Undo", function()
+  state = Game:new()
+end), Button:new(120, 10, 100, 50, "Undo", function()
   if #history > 0 then
     state = table.remove(history) or state
   end
@@ -26,7 +26,7 @@ end) }
 
 function love.update(dt)
   if dragged_card and dragging_origin then
-    dragged_card.pos = animated_pos:from_pos(pos:new(love.mouse.getPosition()) - draggingOffset)
+    dragged_card.pos = AnimatedPos:from_pos(Pos:new(love.mouse.getPosition()) - draggingOffset)
     if not love.mouse.isDown(1) then
       if dragged_card.pos.x == dragging_origin.x and dragged_card.pos.y == dragging_origin.y then
         local next_state = state:automove_card(dragged_card)
@@ -36,13 +36,14 @@ function love.update(dt)
           state = next_state
         end
       else
-        dragged_card.pos = animated_pos:from_pos(dragging_origin)
+        dragged_card.pos = AnimatedPos:from_pos(dragging_origin)
       end
       dragged_card = nil
       dragging_origin = nil
     end
   end
 
+  -- Mouse down
   if love.mouse.isDown(1) then
     local button = find(buttons, function(b)
       return b:has_mouse_over()
@@ -65,11 +66,11 @@ function love.update(dt)
   end
 
   if love.mouse.isDown(1) and not dragged_card then
-    local border = pos:new(14, 14)
+    local border = Pos:new(14, 14)
     local cards = state:top_cards()
     for i = #cards, 1, -1 do
       local card = cards[i]
-      local mouse = pos:new(love.mouse.getPosition())
+      local mouse = Pos:new(love.mouse.getPosition())
       if mouse > card.pos + border and mouse < card.pos + card.size - border then
         dragged_card = card
         dragging_origin = card.pos
@@ -79,7 +80,7 @@ function love.update(dt)
     end
   end
 
-  animated_pos.update(dt)
+  AnimatedPos.update(dt)
 end
 
 function love.draw(dt)

@@ -1,26 +1,26 @@
 require("lib/copy")
 
-game = {}
-game.__index = game
+Game = {}
+Game.__index = Game
 
 local spacing = {}
 for i = 1, 8 do
   spacing[i] = love.graphics.getWidth() / 8 * (i - 1)
 end
 
-function game:new()
+function Game:new()
   local g = {
-    homecells = { stack:new(spacing[1] - 10, 60), stack:new(spacing[2] - 10, 60), stack:new(spacing[3] - 10, 60),
-      stack:new(spacing[4] - 10, 60) },
-    freecells = { stack:new(spacing[5] + 10, 60), stack:new(spacing[6] + 10, 60), stack:new(spacing[7] + 10, 60),
-      stack:new(spacing[8] + 10, 60) },
-    tableau = { stack:new(spacing[1], 200, true), stack:new(spacing[2], 200, true), stack:new(spacing[3], 200, true),
-      stack:new(spacing[4], 200, true), stack:new(spacing[5], 200, true), stack:new(spacing[6], 200, true),
-      stack:new(spacing[7], 200, true), stack:new(spacing[8], 200, true) }
+    homecells = { Stack:new(spacing[1] - 10, 60), Stack:new(spacing[2] - 10, 60), Stack:new(spacing[3] - 10, 60),
+      Stack:new(spacing[4] - 10, 60) },
+    freecells = { Stack:new(spacing[5] + 10, 60), Stack:new(spacing[6] + 10, 60), Stack:new(spacing[7] + 10, 60),
+      Stack:new(spacing[8] + 10, 60) },
+    tableau = { Stack:new(spacing[1], 200, true), Stack:new(spacing[2], 200, true), Stack:new(spacing[3], 200, true),
+      Stack:new(spacing[4], 200, true), Stack:new(spacing[5], 200, true), Stack:new(spacing[6], 200, true),
+      Stack:new(spacing[7], 200, true), Stack:new(spacing[8], 200, true) }
   }
-  local cards = stack:new()
+  local cards = Stack:new()
   for i = 1, 52 do
-    local card = card:new(i)
+    local card = Card:new(i)
     cards:insert(card)
   end
   cards:shuffle()
@@ -76,34 +76,34 @@ local function available_homecell(game, card)
   return nil
 end
 
-function game:automove_card(card)
-  local game = copy(self)
+function Game:automove_card(card)
+  local game = Util.copy(self)
 
   -- Homecells
   local stack = available_homecell(game, card)
   if stack then
     remove_card(game, card)
-    stack:push(copy(card))
+    stack:push(Util.copy(card))
     return game
   end
   -- Tableau
   local stack = available_tableau(game, card)
   if stack then
     remove_card(game, card)
-    stack:push(copy(card))
+    stack:push(Util.copy(card))
     return game
   end
   -- Freecells
   local stack = available_freecell(game)
   if stack then
     remove_card(game, card)
-    stack:push(copy(card))
+    stack:push(Util.copy(card))
     return game
   end
   return self
 end
 
-function game:cards()
+function Game:cards()
   local cards = {}
   for _, stack in ipairs(self.homecells) do
     for _, card in ipairs(stack) do
@@ -123,7 +123,7 @@ function game:cards()
   return cards
 end
 
-function game:top_cards()
+function Game:top_cards()
   local cards = {}
   for _, stack in ipairs(self.homecells) do
     if #stack > 0 then
@@ -143,7 +143,7 @@ function game:top_cards()
   return cards
 end
 
-function game:trigger_animations()
+function Game:trigger_animations()
   for_each(self:cards(), function(card)
     if card.pos.target and not card.pos:is_animating() and
         (card.pos.target.x ~= card.pos.x or card.pos.target.y ~= card.pos.y) then

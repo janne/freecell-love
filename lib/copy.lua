@@ -1,6 +1,8 @@
 require("lib/test")
 
-function copy(obj, seen)
+Util = {}
+
+function Util.copy(obj, seen)
   if type(obj) ~= 'table' then
     return obj
   end
@@ -11,13 +13,13 @@ function copy(obj, seen)
   local res = setmetatable({}, getmetatable(obj))
   s[obj] = res
   for k, v in pairs(obj) do
-    res[copy(k, s)] = copy(v, s)
+    res[Util.copy(k, s)] = Util.copy(v, s)
   end
   return res
 end
 
-function copyWith(t, values)
-  local res = copy(t)
+function Util.copyWith(t, values)
+  local res = Util.copy(t)
   for k, v in pairs(values) do
     res[k] = v
   end
@@ -33,7 +35,7 @@ it("copies a table", function()
       c = 2
     }
   }
-  local clone = copy(original)
+  local clone = Util.copy(original)
   expect(clone.a, 1)
   expect(clone.b.c, 2)
 end)
@@ -43,7 +45,7 @@ it("copies a table with overrides", function()
     a = 1,
     b = 2
   }
-  local clone = copyWith(original, {
+  local clone = Util.copyWith(original, {
     b = 3
   })
   expect(clone.a, 1)

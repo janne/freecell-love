@@ -1,21 +1,12 @@
 {
   "Lua.diagnostics.globals": [
-    "love",
-    "animated_pos",
-    "button",
-    "card",
-    "copy",
-    "copyWith",
     "for_each",
     "map",
     "filter",
     "reduce",
-    "func",
     "find",
-    "game",
     "pos",
-    "stack",
     "it",
-    "expect"
+    "expect",
   ]
 }

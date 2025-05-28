@@ -1,10 +1,10 @@
-button = {}
-button.__index = button
+Button = {}
+Button.__index = Button
 
-function button:new(x, y, w, h, text, onClick)
+function Button:new(x, y, w, h, text, onClick)
   local b = {}
-  b.pos = pos:new(x or 0, y or 0)
-  b.size = pos:new(w or 100, h or 50)
+  b.pos = Pos:new(x or 0, y or 0)
+  b.size = Pos:new(w or 100, h or 50)
   b.text = text or ""
   b.isPressed = false
   b.onClick = onClick or function()
@@ -12,12 +12,12 @@ function button:new(x, y, w, h, text, onClick)
   return setmetatable(b, self)
 end
 
-function button:has_mouse_over()
-  local mouse = pos:new(love.mouse.getPosition())
+function Button:has_mouse_over()
+  local mouse = Pos:new(love.mouse.getPosition())
   return mouse > self.pos and mouse < self.pos + self.size
 end
 
-function button:draw()
+function Button:draw()
   if self.isPressed then
     love.graphics.setColor(0.5, 0.5, 0.5)
   elseif self:has_mouse_over() then

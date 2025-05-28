@@ -1,122 +1,123 @@
 require("lib/test")
 
-pos = {}
-pos.__index = pos
+Pos = {}
+Pos.__index = Pos
 
-function pos:new(x, y)
-  return setmetatable({
+function Pos:new(x, y)
+  local p = {
     x = x or 0,
     y = y or 0
-  }, self)
+  }
+  return setmetatable(p, Pos)
 end
 
-function pos:get()
+function Pos:get()
   return self.x or 0, self.y or 0
 end
 
-function pos:__tostring()
+function Pos:__tostring()
   return "(" .. self.x .. ", " .. self.y .. ")"
 end
 
-function pos:__add(other)
-  return pos:new(self.x + other.x, self.y + other.y)
+function Pos:__add(other)
+  return Pos:new(self.x + other.x, self.y + other.y)
 end
 
-function pos:__sub(other)
-  return pos:new(self.x - other.x, self.y - other.y)
+function Pos:__sub(other)
+  return Pos:new(self.x - other.x, self.y - other.y)
 end
 
-function pos:__mul(other)
-  return pos:new(self.x * other.x, self.y * other.y)
+function Pos:__mul(other)
+  return Pos:new(self.x * other.x, self.y * other.y)
 end
 
-function pos:__div(other)
-  return pos:new(self.x / other.x, self.y / other.y)
+function Pos:__div(other)
+  return Pos:new(self.x / other.x, self.y / other.y)
 end
 
-function pos:__lt(other)
+function Pos:__lt(other)
   return self.x < other.x and self.y < other.y
 end
 
-function pos:__gt(other)
+function Pos:__gt(other)
   return self.x > other.x and self.y > other.y
 end
 
-function pos:__eq(other)
+function Pos:__eq(other)
   return self.x == other.x and self.y == other.y
 end
 
-function pos:abs()
-  return pos:new(math.abs(self.x), math.abs(self.y))
+function Pos:abs()
+  return Pos:new(math.abs(self.x), math.abs(self.y))
 end
 
 -- Test cases
 
 it("pretty prints", function()
-  local p = pos:new(10, 20)
+  local p = Pos:new(10, 20)
   expect(tostring(p), "(10, 20)")
 end)
 
 it("supports addition", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(5, 5)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(5, 5)
   local p3 = p1 + p2
   expect(tostring(p3), "(15, 25)")
 end)
 
 it("supports subtraction", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(5, 5)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(5, 5)
   local p3 = p1 - p2
   expect(tostring(p3), "(5, 15)")
 end)
 
 it("supports multiplication", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(5, 5)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(5, 5)
   local p3 = p1 * p2
   expect(tostring(p3), "(50, 100)")
 end)
 
 it("supports division", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(5, 5)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(5, 5)
   local p3 = p1 / p2
   expect(tostring(p3), "(2, 4)")
 end)
 
 it("supports new and get", function()
-  local p = pos:new(10, 20)
+  local p = Pos:new(10, 20)
   local x, y = p:get()
   expect(tostring(p), "(10, 20)")
 end)
 
 it("defaults to 0 values", function()
-  local p = pos:new(10)
+  local p = Pos:new(10)
   local x, y = p:get()
   expect(tostring(p), "(10, 0)")
 end)
 
 it("allows being called as module function", function()
-  local p = pos:new()
+  local p = Pos:new()
   local x, y = p.get(p)
   expect(tostring(p), "(0, 0)")
 end)
 
 it("supports less than comparison", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(15, 25)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(15, 25)
   expect(p1 < p2, true)
 end)
 
 it("supports greater than comparison", function()
-  local p1 = pos:new(10, 20)
-  local p2 = pos:new(5, 15)
+  local p1 = Pos:new(10, 20)
+  local p2 = Pos:new(5, 15)
   expect(p1 > p2, true)
 end)
 
 it("supports absolute value", function()
-  local p1 = pos:new(-10, -20)
+  local p1 = Pos:new(-10, -20)
   local p2 = p1:abs()
   expect(tostring(p2), "(10, 20)")
 end)

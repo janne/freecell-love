@@ -2,40 +2,40 @@ require("lib/test")
 require("lib/card")
 require("lib/animated_pos")
 
-stack = {}
-stack.__index = stack
+Stack = {}
+Stack.__index = Stack
 
-setmetatable(stack, {
+setmetatable(Stack, {
   __index = table
 })
 
 math.randomseed(os.time())
 
-function stack:new(x, y, spread)
+function Stack:new(x, y, spread)
   local s = {}
-  s.pos = pos:new(x or 0, y or 0)
+  s.pos = Pos:new(x or 0, y or 0)
   s.spread = spread or false
   return setmetatable(s, self)
 end
 
-function stack:push(card)
+function Stack:push(card)
   table.insert(self, card)
-  local newPos = self.pos
+  local new_pos = self.pos
   if self.spread then
-    newPos = self.pos + pos:new(0, #self * 25)
+    new_pos = self.pos + Pos:new(0, #self * 25)
   end
   if card.pos then
-    card.pos:animateTo(newPos)
+    card.pos:animateTo(new_pos)
   else
-    card.pos = animated_pos:from_pos(newPos)
+    card.pos = AnimatedPos:from_pos(new_pos)
   end
 end
 
-function stack:pop()
+function Stack:pop()
   return table.remove(self)
 end
 
-function stack:shuffle()
+function Stack:shuffle()
   for i = #self, 1, -1 do
     local j = math.random(i)
     self[i], self[j] = self[j], self[i]
@@ -45,16 +45,16 @@ end
 -- Test cases
 
 it("allows adding cards", function()
-  local s = stack:new()
-  local c = card:new(1)
+  local s = Stack:new()
+  local c = Card:new(1)
   s:insert(c)
   expect(#s, 1)
 end)
 
 it("allows removing cards", function()
-  local s = stack:new()
-  s:insert(card:new(1))
-  s:insert(card:new(2))
+  local s = Stack:new()
+  s:insert(Card:new(1))
+  s:insert(Card:new(2))
   expect(#s, 2)
   s:remove(1)
   expect(#s, 1)
