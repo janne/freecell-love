@@ -1,22 +1,33 @@
 require("lib/test")
 
-function for_each(t, fn)
-  for _, item in ipairs(t) do
+List = {}
+List.__index = List
+
+function List.new(t)
+  return setmetatable(t or {}, List)
+end
+
+function List:push(item)
+  table.insert(self, item)
+end
+
+function List:for_each(fn)
+  for _, item in ipairs(self) do
     fn(item)
   end
 end
 
-function map(t, fn)
+function List:map(fn)
   local res = {}
-  for _, item in ipairs(t) do
+  for _, item in ipairs(self) do
     table.insert(res, fn(item))
   end
   return res
 end
 
-function filter(t, fn)
+function List:filter(fn)
   local res = {}
-  for _, item in ipairs(t) do
+  for _, item in ipairs(self) do
     if fn(item) then
       table.insert(res, item)
     end
@@ -24,16 +35,16 @@ function filter(t, fn)
   return res
 end
 
-function reduce(t, fn, initial)
+function List:reduce(initial, fn)
   local acc = initial
-  for _, item in ipairs(t) do
+  for _, item in ipairs(self) do
     acc = fn(acc, item)
   end
   return acc
 end
 
-function find(t, fn)
-  for _, item in ipairs(t) do
+function List:find(fn)
+  for _, item in ipairs(self) do
     if fn(item) then
       return item
     end
@@ -43,18 +54,26 @@ end
 
 -- Test cases
 
+it("creates a new list", function()
+  local t = List.new { 1, 2, 3 }
+  expect(#t, 3)
+  expect(t[1], 1)
+  expect(t[2], 2)
+  expect(t[3], 3)
+end)
+
 it("iterates over cards", function()
-  local t = { 1, 2, 3 }
+  local t = List.new { 1, 2, 3 }
   local sum = 0
-  for_each(t, function(item)
+  t:for_each(function(item)
     sum = sum + item
   end)
   expect(sum, 6)
 end)
 
 it("maps items to new values", function()
-  local t = { 1, 2, 3 }
-  local res = map(t, function(item)
+  local t = List.new { 1, 2, 3 }
+  local res = t:map(function(item)
     return item * 2
   end)
   expect(#res, 3)
@@ -64,8 +83,8 @@ it("maps items to new values", function()
 end)
 
 it("filters items based on a condition", function()
-  local t = { 1, 2, 3, 4, 5 }
-  local res = filter(t, function(item)
+  local t = List.new { 1, 2, 3, 4, 5 }
+  local res = t:filter(function(item)
     return item % 2 == 0
   end)
   expect(#res, 2)
@@ -74,21 +93,21 @@ it("filters items based on a condition", function()
 end)
 
 it("reduces items to a single value", function()
-  local t = { 1, 2, 3, 4 }
-  local sum = reduce(t, function(acc, item)
+  local t = List.new { 1, 2, 3, 4 }
+  local sum = t:reduce(0, function(acc, item)
     return acc + item
-  end, 0)
+  end)
   expect(sum, 10)
 end)
 
 it("finds an item based on a condition", function()
-  local t = { 1, 2, 3, 4, 5 }
-  local found = find(t, function(item)
+  local t = List.new { 1, 2, 3, 4, 5 }
+  local found = t:find(function(item)
     return item == 3
   end)
   expect(found, 3)
 
-  local not_found = find(t, function(item)
+  local not_found = t:find(function(item)
     return item == 6
   end)
   expect(not_found, nil)

@@ -1,12 +1,7 @@
 {
   "Lua.diagnostics.globals": [
-    "for_each",
-    "map",
-    "filter",
-    "reduce",
-    "find",
-    "pos",
+    "lldebugger",
     "it",
-    "expect",
+    "expect"
   ]
 }

@@ -7,7 +7,7 @@ require "lib/card"
 require "lib/game"
 require "lib/pos"
 require "lib/stack"
-require "lib/func"
+require "lib/list"
 
 local dragged_card = nil
 local draggingOffset = nil
@@ -15,7 +15,7 @@ local dragging_origin = nil
 local state = Game:new()
 local history = {}
 
-local buttons = { Button:new(10, 10, 100, 50, "New Game", function()
+local buttons = List.new { Button:new(10, 10, 100, 50, "New Game", function()
   history = {}
   state = Game:new()
 end), Button:new(120, 10, 100, 50, "Undo", function()
@@ -45,7 +45,7 @@ function love.update(dt)
 
   -- Mouse down
   if love.mouse.isDown(1) then
-    local button = find(buttons, function(b)
+    local button = buttons:find(function(b)
       return b:has_mouse_over()
     end)
     if button then
@@ -54,7 +54,7 @@ function love.update(dt)
   end
 
   if not love.mouse.isDown(1) then
-    local pressed = find(buttons, function(b)
+    local pressed = buttons:find(function(b)
       return b.isPressed
     end)
     if pressed then
@@ -84,20 +84,20 @@ function love.update(dt)
 end
 
 function love.draw(dt)
-  for_each(state:cards(), function(card)
+  state:cards():for_each(function(card)
     if card ~= dragged_card and not card.pos:is_animating() then
       love.graphics.draw(card.gfx, card.pos.x, card.pos.y, 0, card.scale.x, card.scale.y)
     end
   end)
 
   -- Draw the dragged and animated cards last so they appears on top
-  for_each(state:cards(), function(card)
+  state:cards():for_each(function(card)
     if card == dragged_card or card.pos:is_animating() then
       love.graphics.draw(card.gfx, card.pos.x, card.pos.y, 0, card.scale.x, card.scale.y)
     end
   end)
 
-  for_each(buttons, function(button)
+  buttons:for_each(function(button)
     button:draw()
   end)
 end

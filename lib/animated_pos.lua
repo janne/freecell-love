@@ -1,3 +1,5 @@
+require("lib/list")
+
 AnimatedPos = {}
 AnimatedPos.__index = AnimatedPos
 
@@ -10,7 +12,7 @@ function AnimatedPos:__tostring()
   return "(" .. self.x .. ", " .. self.y .. ", target: " .. tostring(self.target) .. ")"
 end
 
-local animations = {}
+local animations = List.new()
 
 function AnimatedPos:new(x, y)
   local pos = Pos:new(x, y)
@@ -25,12 +27,12 @@ end
 function AnimatedPos:animateTo(target_pos)
   if target_pos.x ~= self.x or target_pos.y ~= self.y then
     self.target = target_pos
-    table.insert(animations, self)
+    animations:push(self)
   end
 end
 
 function AnimatedPos:is_animating()
-  return find(animations, function(animation)
+  return animations:find(function(animation)
     return animation == self
   end) ~= nil
 end

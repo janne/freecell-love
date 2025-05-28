@@ -104,20 +104,20 @@ function Game:automove_card(card)
 end
 
 function Game:cards()
-  local cards = {}
+  local cards = List.new()
   for _, stack in ipairs(self.homecells) do
     for _, card in ipairs(stack) do
-      table.insert(cards, card)
+      cards:push(card)
     end
   end
   for _, stack in ipairs(self.freecells) do
     for _, card in ipairs(stack) do
-      table.insert(cards, card)
+      cards:push(card)
     end
   end
   for _, stack in ipairs(self.tableau) do
     for _, card in ipairs(stack) do
-      table.insert(cards, card)
+      cards:push(card)
     end
   end
   return cards
@@ -144,7 +144,7 @@ function Game:top_cards()
 end
 
 function Game:trigger_animations()
-  for_each(self:cards(), function(card)
+  self:cards():for_each(function(card)
     if card.pos.target and not card.pos:is_animating() and
         (card.pos.target.x ~= card.pos.x or card.pos.target.y ~= card.pos.y) then
       card.pos:animateTo(card.pos.target)
