@@ -1,4 +1,4 @@
-require("lib/copy")
+require("lib/util")
 
 Game = {}
 Game.__index = Game

@@ -1,7 +1,5 @@
 {
   "Lua.diagnostics.globals": [
     "lldebugger",
-    "it",
-    "expect"
-  ]
+  ],
 }

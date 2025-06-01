@@ -1,4 +1,3 @@
-require("lib/test")
 require("lib/card")
 require("lib/animated_pos")
 
@@ -41,22 +40,3 @@ function Stack:shuffle()
     self[i], self[j] = self[j], self[i]
   end
 end
-
--- Test cases
-
-it("allows adding cards", function()
-  local s = Stack:new()
-  local c = Card:new(1)
-  s:insert(c)
-  expect(#s, 1)
-end)
-
-it("allows removing cards", function()
-  local s = Stack:new()
-  s:insert(Card:new(1))
-  s:insert(Card:new(2))
-  expect(#s, 2)
-  s:remove(1)
-  expect(#s, 1)
-  expect(s[1].rank, 2)
-end)

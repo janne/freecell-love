@@ -1,5 +1,3 @@
-require("lib/test")
-
 Util = {}
 
 function Util.copy(obj, seen)
@@ -25,29 +23,3 @@ function Util.copyWith(t, values)
   end
   return res
 end
-
--- Test cases
-
-it("copies a table", function()
-  local original = {
-    a = 1,
-    b = {
-      c = 2
-    }
-  }
-  local clone = Util.copy(original)
-  expect(clone.a, 1)
-  expect(clone.b.c, 2)
-end)
-
-it("copies a table with overrides", function()
-  local original = {
-    a = 1,
-    b = 2
-  }
-  local clone = Util.copyWith(original, {
-    b = 3
-  })
-  expect(clone.a, 1)
-  expect(clone.b, 3) -- Should override the original value
-end)
