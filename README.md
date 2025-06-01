@@ -5,7 +5,13 @@ A Freecell solitaire game implemented in Lua with [LÖVE](https://love2d.org/).
 ## Prerequisites
 
 - [LÖVE](https://love2d.org/).
-- [busted](https://lunarmodules.github.io/busted/)
+- [luarocks](https://github.com/luarocks/luarocks/wiki/Download)
+
+## Setup
+
+```
+$ luarocks install --only-deps freecell-love-1-0.rockspec
+```
 
 ## VSCode Setup
 
